@@ -18,9 +18,21 @@ const App = () => {
   const getNewAnecdote = () => setSelected(generateRandomListItem);
 
   const hanldeUpVote = (selected) => {
-    const voteCopy = { ...votes };
+    const voteCopy = [...votes];
     voteCopy[selected] = voteCopy[selected] + 1;
     setVotes(voteCopy);
+  };
+
+  const MostUpvotes = () => {
+    let maxVotes = Math.max(...votes);
+    let maxIndex = votes.findIndex((elem) => elem === maxVotes);
+
+    return (
+      <>
+        <h1>Annecdote with most upvotes</h1>
+        <p>{anecdotes[maxIndex]}</p>
+      </>
+    );
   };
 
   return (
@@ -31,6 +43,7 @@ const App = () => {
       <br />
       <button onClick={() => hanldeUpVote(selected)}>Up-vote</button>
       <button onClick={getNewAnecdote}>Next Joke</button>
+      <MostUpvotes />
     </>
   );
 };
