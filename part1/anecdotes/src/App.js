@@ -11,14 +11,25 @@ const App = () => {
   ];
 
   const [selected, setSelected] = useState(0);
+  const [votes, setVotes] = useState(Array(anecdotes.length).fill(0));
+
   const generateRandomListItem = () =>
     Math.floor(Math.random() * anecdotes.length);
   const getNewAnecdote = () => setSelected(generateRandomListItem);
+
+  const hanldeUpVote = (selected) => {
+    const voteCopy = { ...votes };
+    voteCopy[selected] = voteCopy[selected] + 1;
+    setVotes(voteCopy);
+  };
 
   return (
     <>
       {anecdotes[selected]}
       <br />
+      <p>{votes[selected]} upvotes.</p>
+      <br />
+      <button onClick={() => hanldeUpVote(selected)}>Up-vote</button>
       <button onClick={getNewAnecdote}>Next Joke</button>
     </>
   );
