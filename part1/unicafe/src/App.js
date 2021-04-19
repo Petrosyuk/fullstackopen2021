@@ -1,33 +1,5 @@
 import React, { useState } from "react";
-
-const Button = ({ handleClick, buttonText }) => (
-  <button onClick={handleClick}> {buttonText} </button>
-);
-
-const Statistics = ({ good, neutral, bad }) => {
-  const allCount = good + neutral + bad;
-
-  if (allCount === 0) {
-    return (
-      <>
-        <h1>statistics</h1>
-        <br />
-        No feedback given
-      </>
-    );
-  }
-  return (
-    <>
-      <h1>statistics</h1>
-      <p>good {good}</p>
-      <p>neutral {neutral}</p>
-      <p>bad {bad}</p>
-      <p>all {allCount}</p>
-      <p>average {(good + bad * -1) / allCount}</p>
-      <p>average {good / allCount} %</p>
-    </>
-  );
-};
+import { Button, Statistics } from "./Components";
 
 const App = () => {
   // save clicks of each button to its own state
