@@ -19,9 +19,6 @@ export const Content = (props) => {
   );
 };
 export const Total = (props) => {
-  var counter = 0;
-  props.parts.forEach((element) => {
-    counter += element.exercises;
-  });
+  const counter = props.parts.reduce((prev, curr) => curr.exercises + prev, 0);
   return <p>Number of exercises {counter}</p>;
 };

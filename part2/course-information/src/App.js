@@ -1,6 +1,5 @@
 import React from "react";
 import { Header, Content, Total } from "./Components";
-import { Counter, MultiDirectionalCounter } from "./StatefulComponents";
 
 const App = () => {
   const course = {
@@ -29,12 +28,9 @@ const App = () => {
     <div>
       <Header name={course.name} />
       {course.parts.map((part) => (
-        <Content key={part.od} parts={part} />
+        <Content key={part.id} parts={part} />
       ))}
-      {/* <Content parts={course.parts[0]} />
-      <Content parts={course.parts[1]} />
-      <Content parts={course.parts[2]} />
-      <Total parts={course.parts} />  */}
+      <Total parts={course.parts} />
     </div>
   );
 };
