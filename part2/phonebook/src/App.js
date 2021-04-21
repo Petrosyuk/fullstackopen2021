@@ -1,21 +1,19 @@
 import React, { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", tel: "718-718-718" },
+  ]);
   const [newName, setNewName] = useState("");
+  const [newTel, setNewTel] = useState("");
 
   const addPerson = (event) => {
     event.preventDefault();
 
     const personObject = {
       name: newName,
+      tel: newTel,
     };
-
-    // console.log(
-    //   persons,
-    //   personObject,
-    //
-    // );
 
     // Check is person already on the list
     if (persons.filter((person) => person.name === newName).length) {
@@ -24,10 +22,15 @@ const App = () => {
 
     setPersons(persons.concat(personObject));
     setNewName("");
+    setNewTel("");
   };
 
   const handleNewName = (event) => {
     setNewName(event.target.value);
+  };
+
+  const handleNewTel = (event) => {
+    setNewTel(event.target.value);
   };
 
   return (
@@ -38,14 +41,18 @@ const App = () => {
           name: <input value={newName} onChange={handleNewName} />
         </div>
         <div>
+          tel: <input value={newTel} onChange={handleNewTel}></input>
+        </div>
+        <div>
           <button type="submit">add</button>
-          <button>clear</button>
         </div>
       </form>
       <h2>Numbers</h2>
       <ul>
         {persons.map((person) => (
-          <li key={person.name}>{person.name}</li>
+          <li key={person.name}>
+            {person.name} {person.tel}
+          </li>
         ))}
       </ul>
     </div>
