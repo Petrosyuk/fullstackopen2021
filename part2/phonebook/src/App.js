@@ -2,10 +2,17 @@ import React, { useState } from "react";
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: "Arto Hellas", tel: "718-718-718" },
+    { name: "Arto Hellas", number: "040-123456" },
+    { name: "Ada Lovelace", number: "39-44-5323523" },
+    { name: "Dan Abramov", number: "12-43-234345" },
+    { name: "Mary Poppendieck", number: "39-23-6423122" },
   ]);
+
+  const [displayedPersons, setDisplayedPersons] = useState(persons);
+
   const [newName, setNewName] = useState("");
   const [newTel, setNewTel] = useState("");
+  const [newSearch, setNewSearch] = useState("");
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -33,9 +40,24 @@ const App = () => {
     setNewTel(event.target.value);
   };
 
+  const handleNewSearch = (event) => {
+    setNewSearch(event.target.value);
+
+    const filteredPersons = persons.filter((person) =>
+      person.name.toLowerCase().includes(event.target.value.toLowerCase())
+    );
+
+    if (filteredPersons) {
+      setDisplayedPersons(filteredPersons);
+    }
+    setPersons(persons);
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
+      Filter shown with:{" "}
+      <input value={newSearch} onChange={handleNewSearch}></input>
       <form onSubmit={addPerson} autoComplete="off">
         <div>
           name: <input value={newName} onChange={handleNewName} />
@@ -49,7 +71,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <ul>
-        {persons.map((person) => (
+        {displayedPersons.map((person) => (
           <li key={person.name}>
             {person.name} {person.tel}
           </li>
