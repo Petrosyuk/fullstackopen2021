@@ -10,6 +10,18 @@ const App = () => {
     const personObject = {
       name: newName,
     };
+
+    // console.log(
+    //   persons,
+    //   personObject,
+    //
+    // );
+
+    // Check is person already on the list
+    if (persons.filter((person) => person.name === newName).length) {
+      return alert(`${personObject.name} is already on the list!`);
+    }
+
     setPersons(persons.concat(personObject));
     setNewName("");
   };
@@ -33,7 +45,7 @@ const App = () => {
       <h2>Numbers</h2>
       <ul>
         {persons.map((person) => (
-          <li>{person.name}</li>
+          <li key={person.name}>{person.name}</li>
         ))}
       </ul>
     </div>
