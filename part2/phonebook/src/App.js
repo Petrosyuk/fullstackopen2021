@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { Filter } from "./components/InputComponent";
+import { Persons } from "./components/Persons";
+import { PersonForm } from "./components/PersonForm";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -16,7 +19,6 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault();
-
     const personObject = {
       name: newName,
       tel: newTel,
@@ -27,9 +29,12 @@ const App = () => {
       return alert(`${personObject.name} is already on the list!`);
     }
 
+    // Else add to the list
     setPersons(persons.concat(personObject));
     setNewName("");
     setNewTel("");
+
+    setDisplayedPersons(persons);
   };
 
   const handleNewName = (event) => {
@@ -50,33 +55,29 @@ const App = () => {
     if (filteredPersons) {
       setDisplayedPersons(filteredPersons);
     }
-    setPersons(persons);
+    // setPersons(persons);
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
-      Filter shown with:{" "}
-      <input value={newSearch} onChange={handleNewSearch}></input>
-      <form onSubmit={addPerson} autoComplete="off">
-        <div>
-          name: <input value={newName} onChange={handleNewName} />
-        </div>
-        <div>
-          tel: <input value={newTel} onChange={handleNewTel}></input>
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-      <ul>
-        {displayedPersons.map((person) => (
-          <li key={person.name}>
-            {person.name} {person.tel}
-          </li>
-        ))}
-      </ul>
+
+      <Filter
+        inputText={"Search"}
+        inputValueState={newSearch}
+        onChangeHandler={handleNewSearch}
+      />
+
+      <h3>Add a new</h3>
+      <PersonForm
+        addPerson={addPerson}
+        newName={newName}
+        handleNewName={handleNewName}
+        newTel={newTel}
+        handleNewTel={handleNewTel}
+      />
+
+      <Persons displayedPersons={displayedPersons} />
     </div>
   );
 };
