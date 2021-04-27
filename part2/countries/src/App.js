@@ -12,7 +12,7 @@ function App() {
 
   const onLoadGetCountries = () =>
     axios
-      .get("http://localhost:3001/countries")
+      .get("https://restcountries.eu/rest/v2/all")
       .then((_countries) => setCountries(_countries.data));
 
   function searchFilter(rows) {
