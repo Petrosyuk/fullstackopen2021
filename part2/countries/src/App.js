@@ -2,23 +2,21 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { CountryList } from "./Components/countries";
 
-// const [searchState, setSearchState] = useState("");
-
 function App() {
-  const [displayedPersons, setDisplayedPersons] = useState("");
+  const [filterCountry, setFilterCountry] = useState("");
   const [countries, setCountries] = useState([]);
 
-  const handleSeachChange = (event) => setDisplayedPersons(event.target.value);
+  const handleSeachChange = (event) => setFilterCountry(event.target.value);
 
   const onLoadGetCountries = () =>
     axios
       .get("https://restcountries.eu/rest/v2/all")
       .then((_countries) => setCountries(_countries.data));
 
-  function searchFilter(rows) {
-    return rows.filter(
+  function searchFilter(countries) {
+    return countries.filter(
       (country) =>
-        country.name.toLowerCase().indexOf(displayedPersons.toLowerCase()) > -1
+        country.name.toLowerCase().indexOf(filterCountry.toLowerCase()) > -1
     );
   }
 
@@ -31,7 +29,7 @@ function App() {
         Find Countries:{" "}
         <input
           onChange={handleSeachChange}
-          value={displayedPersons}
+          value={filterCountry}
           autoComplete="off"
         ></input>
       </div>
