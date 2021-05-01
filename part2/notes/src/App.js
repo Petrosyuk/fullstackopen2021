@@ -5,7 +5,7 @@ import noteServices from "./services/notes";
 const App = () => {
   const [notes, setNotes] = useState([]);
   useEffect(() => {
-    noteServices.getAll().then((rsp) => setNotes(rsp.data));
+    noteServices.getAll().then((rsp) => setNotes(rsp));
   }, []);
 
   const toggleImportanceOf = (id) => {

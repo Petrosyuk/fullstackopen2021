@@ -1,40 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Filter } from "./components/InputComponent";
 import { Persons } from "./components/Persons";
 import { PersonForm } from "./components/PersonForm";
+import personsApi from "./services/personsApi";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456" },
-    { name: "Ada Lovelace", number: "39-44-5323523" },
-    { name: "Dan Abramov", number: "12-43-234345" },
-    { name: "Mary Poppendieck", number: "39-23-6423122" },
-  ]);
-
+  const [persons, setPersons] = useState([]);
   const [displayedPersons, setDisplayedPersons] = useState(persons);
 
   const [newName, setNewName] = useState("");
   const [newTel, setNewTel] = useState("");
   const [newSearch, setNewSearch] = useState("");
 
+  useEffect(() => {
+    personsApi.getAll().then((rsp) => {
+      console.log(rsp);
+      setPersons(rsp.data);
+      setDisplayedPersons(rsp.data);
+    });
+  }, []);
+
   const addPerson = (event) => {
     event.preventDefault();
     const personObject = {
       name: newName,
-      tel: newTel,
+      number: newTel,
     };
-
     // Check is person already on the list
     if (persons.filter((person) => person.name === newName).length) {
       return alert(`${personObject.name} is already on the list!`);
     }
-
     // Else add to the list
+    personsApi
+      .addPerson(personObject)
+      .then((rsp) => setDisplayedPersons([...persons, rsp.data]));
     setPersons(persons.concat(personObject));
     setNewName("");
     setNewTel("");
+  };
 
-    setDisplayedPersons(persons);
+  const removePerson = (id) => {
+    personsApi.removePerson(id).then(() => {
+      const newDisplayPersons = displayedPersons.filter(
+        (person) => person.id !== id
+      );
+      setDisplayedPersons(newDisplayPersons);
+    });
   };
 
   const handleNewName = (event) => {
@@ -77,7 +88,10 @@ const App = () => {
         handleNewTel={handleNewTel}
       />
 
-      <Persons displayedPersons={displayedPersons} />
+      <Persons
+        displayedPersons={displayedPersons}
+        deletePersonApiFunc={removePerson}
+      />
     </div>
   );
 };
