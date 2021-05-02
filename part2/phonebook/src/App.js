@@ -3,10 +3,14 @@ import { Filter } from "./components/InputComponent";
 import { Persons } from "./components/Persons";
 import { PersonForm } from "./components/PersonForm";
 import personsApi from "./services/personsApi";
+import { ErrorNotification, Notification } from "./components/Notification";
+import "./App.css";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [displayedPersons, setDisplayedPersons] = useState(persons);
+  const [notificationMsg, setNotificationMsg] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const [newName, setNewName] = useState("");
   const [newTel, setNewTel] = useState("");
@@ -45,18 +49,26 @@ const App = () => {
         }
       } else {
         // if person name and tell phone number matches, reject new entry
-        return alert(`${personObject.name} is already on the list!`);
+        displayNotificationMsg(
+          setErrorMsg,
+          `${personObject.name} is already on the list!`
+        );
       }
     }
 
     // Else add to the list if not exists
     if (!existingPerson.length) {
-      personsApi
-        .addPerson(personObject)
-        .then((rsp) => setDisplayedPersons([...persons, rsp.data]));
-      setPersons(persons.concat(personObject));
-      setNewName("");
-      setNewTel("");
+      personsApi.addPerson(personObject).then((rsp) => {
+        setDisplayedPersons([...persons, rsp.data]);
+        setPersons([...persons, rsp.data]);
+        setNewName("");
+        setNewTel("");
+      });
+
+      displayNotificationMsg(
+        setNotificationMsg,
+        `${personObject.name} has been added!`
+      );
     }
   };
 
@@ -67,12 +79,16 @@ const App = () => {
     );
 
     if (confirmRsp) {
-      personsApi.removePerson(id).then(() => {
-        const newDisplayPersons = displayedPersons.filter(
-          (person) => person.id !== id
-        );
-        setDisplayedPersons(newDisplayPersons);
-      });
+      personsApi
+        .removePerson(id)
+        .then(() => {
+          const newDisplayPersons = displayedPersons.filter(
+            (person) => person.id !== id
+          );
+          setDisplayedPersons(newDisplayPersons);
+          displayNotificationMsg(setNotificationMsg, "REMOVED");
+        })
+        .catch((err) => displayNotificationMsg(setErrorMsg, err.message));
     }
   };
 
@@ -97,6 +113,11 @@ const App = () => {
     // setPersons(persons);
   };
 
+  const displayNotificationMsg = (notificationSetter, notificationText) => {
+    notificationSetter(notificationText);
+    setTimeout(() => notificationSetter(null), 2300);
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -106,7 +127,8 @@ const App = () => {
         inputValueState={newSearch}
         onChangeHandler={handleNewSearch}
       />
-
+      <Notification notificationMessage={notificationMsg} />
+      <ErrorNotification notificationMessage={errorMsg} />
       <h3>Add a new</h3>
       <PersonForm
         addPerson={addPerson}
