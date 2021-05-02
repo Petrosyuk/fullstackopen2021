@@ -9,8 +9,11 @@ const addPerson = (personObject) => {
 };
 
 const removePerson = (id) => {
-  const payload = `${personsUrl}/${id}`;
-  return axios.delete(payload);
+  return axios.delete(`${personsUrl}/${id}`);
 };
 
-export default { getAll, addPerson, removePerson };
+const updatePerson = (personObject) => {
+  axios.patch(`${personsUrl}/${personObject.id}`, personObject);
+};
+
+export default { getAll, addPerson, removePerson, updatePerson };

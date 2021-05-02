@@ -14,7 +14,6 @@ const App = () => {
 
   useEffect(() => {
     personsApi.getAll().then((rsp) => {
-      console.log(rsp);
       setPersons(rsp.data);
       setDisplayedPersons(rsp.data);
     });
@@ -26,26 +25,55 @@ const App = () => {
       name: newName,
       number: newTel,
     };
+
     // Check is person already on the list
-    if (persons.filter((person) => person.name === newName).length) {
-      return alert(`${personObject.name} is already on the list!`);
+    const existingPerson = persons.filter((person) => person.name === newName);
+    if (existingPerson.length) {
+      //  Check if a person exists but with a different number
+      if (existingPerson[0].number !== newTel) {
+        const updateTelConfirm = window.confirm(
+          `${existingPerson[0].name} already added to the phone book, replace the old number with the new one?`
+        );
+        // Update if diff number and user want to.
+        if (updateTelConfirm) {
+          let updateObject = existingPerson[0];
+          updateObject.number = newTel;
+          console.log(updateObject);
+          personsApi.updatePerson(updateObject);
+          setNewName("");
+          setNewTel("");
+        }
+      } else {
+        // if person name and tell phone number matches, reject new entry
+        return alert(`${personObject.name} is already on the list!`);
+      }
     }
-    // Else add to the list
-    personsApi
-      .addPerson(personObject)
-      .then((rsp) => setDisplayedPersons([...persons, rsp.data]));
-    setPersons(persons.concat(personObject));
-    setNewName("");
-    setNewTel("");
+
+    // Else add to the list if not exists
+    if (!existingPerson.length) {
+      personsApi
+        .addPerson(personObject)
+        .then((rsp) => setDisplayedPersons([...persons, rsp.data]));
+      setPersons(persons.concat(personObject));
+      setNewName("");
+      setNewTel("");
+    }
   };
 
   const removePerson = (id) => {
-    personsApi.removePerson(id).then(() => {
-      const newDisplayPersons = displayedPersons.filter(
-        (person) => person.id !== id
-      );
-      setDisplayedPersons(newDisplayPersons);
-    });
+    const personItem = persons.filter((person) => person.id === id)[0];
+    const confirmRsp = window.confirm(
+      `Delete ${personItem.name} from the reccord?`
+    );
+
+    if (confirmRsp) {
+      personsApi.removePerson(id).then(() => {
+        const newDisplayPersons = displayedPersons.filter(
+          (person) => person.id !== id
+        );
+        setDisplayedPersons(newDisplayPersons);
+      });
+    }
   };
 
   const handleNewName = (event) => {
