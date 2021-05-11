@@ -25,6 +25,7 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault();
+
     const personObject = {
       name: newName,
       number: newTel,
@@ -59,8 +60,9 @@ const App = () => {
     // Else add to the list if not exists
     if (!existingPerson.length) {
       personsApi.addPerson(personObject).then((rsp) => {
-        setDisplayedPersons([...persons, rsp.data]);
-        setPersons([...persons, rsp.data]);
+        console.log(rsp.data);
+        setDisplayedPersons([...rsp.data]);
+        setPersons([rsp.data]);
         setNewName("");
         setNewTel("");
       });
