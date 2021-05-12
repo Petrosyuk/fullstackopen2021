@@ -18,10 +18,6 @@ if (process.argv.length < 3) {
 
 // Get all reccords if not individual person data is passed.
 if (process.argv.length === 3) {
-  console.log(
-    "No input reccord passed, getting all currently stored reccords."
-  );
-
   const password = process.argv[2];
   const connectionString = URL({
     password: password,
@@ -45,8 +41,9 @@ if (process.argv.length === 3) {
 
   Person.find({})
     .then((result) => {
+      console.log("phonebook:");
       result.forEach((note) => {
-        console.log(note);
+        console.log(note.name, note.number);
       });
       mongoose.connection.close();
     })
