@@ -60,9 +60,9 @@ const App = () => {
     // Else add to the list if not exists
     if (!existingPerson.length) {
       personsApi.addPerson(personObject).then((rsp) => {
-        console.log(rsp.data);
-        setDisplayedPersons([...rsp.data]);
-        setPersons([rsp.data]);
+        console.log(persons, rsp.data);
+        // setDisplayedPersons([displayedPersons, ...rsp.data]);
+        // setPersons([persons, ...rsp.data]);
         setNewName("");
         setNewTel("");
       });
