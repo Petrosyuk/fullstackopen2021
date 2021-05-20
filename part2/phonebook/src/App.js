@@ -23,6 +23,11 @@ const App = () => {
     });
   }, []);
 
+  const displayNotificationMsg = (notificationSetter, notificationText) => {
+    notificationSetter(notificationText);
+    setTimeout(() => notificationSetter(null), 2300);
+  };
+
   const addPerson = (event) => {
     event.preventDefault();
 
@@ -59,18 +64,23 @@ const App = () => {
 
     // Else add to the list if not exists
     if (!existingPerson.length) {
-      personsApi.addPerson(personObject).then((rsp) => {
-        console.log(persons, rsp.data);
-        // setDisplayedPersons([displayedPersons, ...rsp.data]);
-        // setPersons([persons, ...rsp.data]);
-        setNewName("");
-        setNewTel("");
-      });
+      personsApi
+        .addPerson(personObject)
+        .then((rsp) => {
+          console.log(persons, rsp.data);
+          // setDisplayedPersons([displayedPersons, ...rsp.data]);
+          // setPersons([persons, ...rsp.data]);
+          setNewName("");
+          setNewTel("");
 
-      displayNotificationMsg(
-        setNotificationMsg,
-        `${personObject.name} has been added!`
-      );
+          displayNotificationMsg(
+            setNotificationMsg,
+            `${personObject.name} has been added!`
+          );
+        })
+        .catch((err) => {
+          displayNotificationMsg(setErrorMsg, err.message);
+        });
     }
   };
 
@@ -113,11 +123,6 @@ const App = () => {
       setDisplayedPersons(filteredPersons);
     }
     // setPersons(persons);
-  };
-
-  const displayNotificationMsg = (notificationSetter, notificationText) => {
-    notificationSetter(notificationText);
-    setTimeout(() => notificationSetter(null), 2300);
   };
 
   return (
